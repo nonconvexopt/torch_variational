@@ -20,11 +20,7 @@ layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
 ## References
 ```
 [1] @inproceedings{DBLP:conf/iclr/WenVBTG18,
-  author    = {Yeming Wen and
-               Paul Vicol and
-               Jimmy Ba and
-               Dustin Tran and
-               Roger B. Grosse},
+  author    = {Yeming Wen, Paul Vicol, Jimmy Ba, Dustin Tran, Roger B. Grosse},
   title     = {Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches},
   booktitle = {6th International Conference on Learning Representations, {ICLR} 2018,
                Vancouver, BC, Canada, April 30 - May 3, 2018, Conference Track Proceedings},
