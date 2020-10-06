@@ -1,5 +1,5 @@
 # pytorch-flipout
-Simple Pytorch implementation of "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018
+Pytorch implementation of "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018
 
 ## Dependencies
 Pytorch >= 1.6.0
