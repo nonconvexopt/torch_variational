@@ -5,8 +5,8 @@ Simple Pytorch implementation of "Flipout: Efficient Pseudo-Independent Weight P
 Pytorch >= 1.6.0
 
 ## Available modules
-Conv2d_flipout
-Linear_flipout
+Conv2d_flipout<br>
+Linear_flipout<br>
 (To be added)
 
 ## Usage
