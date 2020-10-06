@@ -2,8 +2,17 @@
 Simple Pytorch implementation of "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches"
 
 ##Version
+Pytorch >= 1.6.0
 
 ##Usage
+Pull this repository or just simply copy and paste the codes.
+
+Example usage:
+<pre><code>{
+import flipout
+layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
+}</code></pre>
+
 
 ##References
 ```
