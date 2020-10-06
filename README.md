@@ -30,9 +30,6 @@ layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
                Vancouver, BC, Canada, April 30 - May 3, 2018, Conference Track Proceedings},
   publisher = {OpenReview.net},
   year      = {2018},
-  url       = {https://openreview.net/forum?id=rJNpifWAb},
-  timestamp = {Thu, 25 Jul 2019 14:25:49 +0200},
-  biburl    = {https://dblp.org/rec/conf/iclr/WenVBTG18.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+  url       = {https://openreview.net/forum?id=rJNpifWAb}
 }
 ```
