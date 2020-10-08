@@ -14,7 +14,8 @@ Pull this repository or just simply copy and paste the codes.
 
 Example usage:
 <pre><code>import flipout
-layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)</code></pre>
+layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
+output, kld = layer(torch.randn(1, 10))</code></pre>
 
 
 ## References
