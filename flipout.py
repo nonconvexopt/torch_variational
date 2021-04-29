@@ -1,19 +1,17 @@
+import math
+
 import torch
 import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 
-import math
-
-def out_sign(x):
-    return x * torch.empty(x.shape, requires_grad = False, device = x.device).uniform_(-1, 1).sign()
+def mul_sign(x) -> torch.Tensor:
+    #Best performance on several experiments
+    return x.mul(torch.empty(x.shape, device = x.device).uniform_(-1,1).sign())
 
 class Conv2d_flipout(nn.Module):
-    def __init__(self, in_features, out_features, bias=False, kernel_size=1, stride=1, padding=0, dilation=1, groups=1):
+    def __init__(self, in_features: int, out_features: int, bias=False, kernel_size=1, stride=1, padding=0, dilation=1, groups=1):
         super(Conv2d_flipout, self).__init__()
-        
-        self.in_features = in_features
-        self.out_features = out_features
         
         if isinstance(kernel_size, int):
             self.kernel_size = [kernel_size, kernel_size]
@@ -25,12 +23,19 @@ class Conv2d_flipout(nn.Module):
         self.dilation = dilation
         self.groups = groups
         
-        self.weight_mu = nn.Parameter(torch.empty([self.out_features, self.in_features] + self.kernel_size).normal_(0, 1/self.out_features))
-        self.weight_logvar = nn.Parameter(torch.ones([self.out_features, self.in_features] + self.kernel_size) *
-                                          (- torch.empty(1).fill_(self.out_features).log()))
+        self.weight_mu = nn.Parameter(
+            torch.empty(
+                [out_features, in_features] + self.kernel_size
+            ).normal_(0, 1/out_features)
+        )
+        
+        self.weight_logvar = nn.Parameter(
+            torch.ones(
+                [out_features, in_features] + self.kernel_size
+            ) * (- torch.empty(1).fill_(out_features).log()))
         
         if bias:
-            self.bias = nn.Parameter(torch.empty(self.out_features))
+            self.bias = nn.Parameter(torch.empty(out_features))
         else:
             self.register_parameter('bias', None)
         self.reset_parameters()
@@ -40,11 +45,12 @@ class Conv2d_flipout(nn.Module):
             fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight_mu)
             bound = 1 / math.sqrt(fan_in)
             init.uniform_(self.bias, -bound, bound)
-            
-    def forward(self, x):
-        weight_noise = torch.empty(self.weight_mu.shape, requires_grad = False, device = self.weight_mu.device).normal_(0,1)
         
-        in_sign = torch.empty(x.shape, requires_grad = False, device = self.weight_mu.device).uniform_(-1,1).sign()
+    def kld(self):
+        return (self.weight_mu.pow(2) - self.weight_logvar + self.weight_logvar.exp() - 1).mean().div(2)
+            
+    def forward(self, x) -> (torch.Tensor, torch.Tensor):
+        weight_noise = torch.empty(self.weight_mu.shape, requires_grad = False, device = self.weight_mu.device).normal_(0,1)
         
         x = F.conv2d(
             x,
@@ -53,29 +59,26 @@ class Conv2d_flipout(nn.Module):
             stride = self.stride,
             padding = self.padding,
             dilation = self.dilation,
-            groups = self.groups) + out_sign(F.conv2d(
-            in_sign * x,
+            groups = self.groups) + mul_sign(F.conv2d(
+            mul_sign(x),
             weight_noise * self.weight_mu * self.weight_logvar.div(2).exp(),
             stride = self.stride,
             padding = self.padding,
             dilation = self.dilation,
             groups = self.groups))
         
-        return x, (self.weight_mu.pow(2) - self.weight_logvar + self.weight_logvar.exp() - 1).mean()/2
+        return x, self.kld()
     
 class Linear_flipout(nn.Module):
-    def __init__(self, in_features, out_features, bias=True):
+    def __init__(self, in_features: int, out_features: int, bias=True) -> None:
         super(Linear_flipout, self).__init__()
         
-        self.in_features = in_features
-        self.out_features = out_features
-        
-        self.weight_mu = nn.Parameter(torch.empty([self.out_features, self.in_features]).normal_(0, 1/self.out_features))
-        self.weight_logvar = nn.Parameter(torch.ones([self.out_features, self.in_features]) *
-                                          (- torch.empty(1).fill_(self.out_features).log()))
+        self.weight_mu = nn.Parameter(torch.empty([out_features, in_features]).normal_(0, 1/out_features))
+        self.weight_logvar = nn.Parameter(torch.ones([out_features, in_features]) *
+                                          (- torch.empty(1).fill_(out_features).log()))
     
         if bias:
-            self.bias = nn.Parameter(torch.empty(self.out_features))
+            self.bias = nn.Parameter(torch.empty(out_features))
         else:
             self.register_parameter('bias', None)
         self.reset_parameters()
@@ -85,12 +88,12 @@ class Linear_flipout(nn.Module):
             fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight_mu)
             bound = 1 / math.sqrt(fan_in)
             init.uniform_(self.bias, -bound, bound)
+            
+    def kld(self) -> torch.Tensor:
+        return (self.weight_mu.pow(2) - self.weight_logvar + self.weight_logvar.exp() - 1).mean().div(2)
 
-    def forward(self, x):
+    def forward(self, x) -> (torch.Tensor, torch.Tensor):
         weight_noise = torch.empty(self.weight_mu.shape, requires_grad = False,  device = self.weight_mu.device).normal_(0,1)
+        x = F.linear(x, self.weight_mu, bias=self.bias) + mul_sign(F.linear(mul_sign(x), weight_noise * self.weight_mu * self.weight_logvar.div(2).exp()))
         
-        in_sign = torch.empty(x.shape, requires_grad = False, device = self.weight_mu.device).uniform_(-1,1).sign()
-        
-        x = F.linear(x, self.weight_mu, bias=self.bias) + out_sign(F.linear(in_sign * x, weight_noise * self.weight_mu * self.weight_logvar.div(2).exp()))
-        
-        return x, (self.weight_mu.pow(2) - self.weight_logvar + self.weight_logvar.exp() - 1).mean()/2
+        return x, self.kld()
