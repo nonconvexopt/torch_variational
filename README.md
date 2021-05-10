@@ -17,6 +17,12 @@ Example usage:
 layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
 output, kld = layer(torch.randn(1, 10))</code></pre>
 
+## Derivations
+$$
+q(w_{ij})=N(w_{ij}|\mu_{ij}, \mu_{ij}^2\sigma_{ij}^2) \\
+a_{ij} = \sum_{i} x_i w_{ij} \\
+q(a_{ij}) = N(a_{ij}|\sum_{i} x_i w_{ij}, \sum_{i} x_i^2 w_{ij}^2)
+$$
 
 ## References
 ```
