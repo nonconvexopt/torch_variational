@@ -7,7 +7,8 @@ Pytorch >= 1.0.0
 ## Available modules
 Conv2d_flipout<br>
 Linear_flipout<br>
-(To be added)
+Flipout Wrapper for nn.module<br>
+Local Reparameterization Wrapper for nn.module<br>
 
 ## Usage
 Pull this repository or just simply copy and paste the codes.
