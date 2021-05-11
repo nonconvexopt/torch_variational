@@ -2,7 +2,7 @@
 Pytorch implementation of "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018
 
 ## Dependencies
-Pytorch >= 1.6.0
+Pytorch >= 1.0.0
 
 ## Available modules
 Conv2d_flipout<br>
