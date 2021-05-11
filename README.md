@@ -7,7 +7,7 @@ Local Reparameterization Trick in "Variational Dropout and the Local Reparameter
 Pytorch >= 1.0.0
 
 ## Available modules
-Variationalizers - Wrapper for nn.module
+Variationalizers - Wrapper for nn.module class(Supports [Lazy|Standard][Linear|Convolutional] layers.)
 - Flipout Wrapper<br>
 - Local Reparameterization Wrapper<br>
 
