@@ -13,24 +13,26 @@ Linear_flipout<br>
 Pull this repository or just simply copy and paste the codes.
 
 Example usage 1:
-<pre><code>
+```
 import pytorch_flipout.flipout
 layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
 output, kld = layer(torch.randn(1, 10))
-<br></code></pre>
+```
 
 Example usage 2:
-<pre><code>
+```
 import pytorch_flipout.Variational
 layer = flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
-<br></code></pre>
+```
 
 ## Derivations
+```
 $$
 q(w_{ij})=N(w_{ij}|\mu_{ij}, \mu_{ij}^2\sigma_{ij}^2) \\
 a_{ij} = \sum_{i} x_i w_{ij} \\
 q(a_{ij}) = N(a_{ij}|\sum_{i} x_i w_{ij}, \sum_{i} x_i^2 w_{ij}^2)
 $$
+```
 
 ## References
 ```
