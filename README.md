@@ -1,7 +1,7 @@
 # pytorch-flipout
 Pytorch implementation and Wapper classes for torch.nn.modules layers of:<br>
-Flipout in "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018<br>
-Local Reparameterization Trick in "Variational Dropout and the Local Reparameterization Trick", NIPS 2015<br>
+- Flipout[1]<br>
+- Local Reparameterization Trick[2]<br>
 
 ## Dependencies
 Pytorch >= 1.0.0
@@ -47,8 +47,15 @@ $$
   title     = {Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches},
   booktitle = {6th International Conference on Learning Representations, {ICLR} 2018,
                Vancouver, BC, Canada, April 30 - May 3, 2018, Conference Track Proceedings},
-  publisher = {OpenReview.net},
   year      = {2018},
   url       = {https://openreview.net/forum?id=rJNpifWAb}
+}
+[2] @inproceedings{NIPS2015_bc731692,
+ author = {Kingma, Durk P and Salimans, Tim and Welling, Max},
+ title = {Variational Dropout and the Local Reparameterization Trick},
+ booktitle = {Advances in Neural Information Processing Systems},
+ volume = {28},
+ year = {2015}
+ url = {https://proceedings.neurips.cc/paper/2015/file/bc7316929fe1545bf0b98d114ee3ecb8-Paper.pdf},
 }
 ```
