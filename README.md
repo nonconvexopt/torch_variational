@@ -11,7 +11,7 @@ Variationalizers:
 - Flipout Wrapper for nn.module<br>
 - Local Reparameterization Wrapper for nn.module<br>
 <br>
-Stand-alone Flipout layers:
+Stand-alone Flipout layers:<br>
 - Conv2d_flipout<br>
 - Linear_flipout<br>
 
