@@ -17,13 +17,13 @@ Example usage 1:
 import pytorch_flipout.flipout
 layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
 output, kld = layer(torch.randn(1, 10))
-</code></pre>
+//</code></pre>
 
 Example usage 2:
 <pre><code>
 import pytorch_flipout.Variational
 layer = flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
-</code></pre>
+//</code></pre>
 
 ## Derivations
 $$
