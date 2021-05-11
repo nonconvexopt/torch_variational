@@ -1,5 +1,5 @@
 # pytorch-flipout
-Pytorch implementation and Wapper classes for <h5>torch.nn.modules</h5> layers of:<br>
+Pytorch implementation and Wapper classes for torch.nn.modules layers of:<br>
 Flipout in "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018<br>
 Local Reparameterization Trick in "Variational Dropout and the Local Reparameterization Trick", NIPS 2015<br>
 
