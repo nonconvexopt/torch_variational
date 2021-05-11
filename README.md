@@ -16,7 +16,6 @@ Stand-alone Flipout layers:
 - Linear_flipout<br>
 
 ## Usage
-Pull this repository or just simply copy and paste the codes.
 
 Example usage for wrapper classes:
 ```
