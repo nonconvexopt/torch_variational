@@ -18,17 +18,17 @@ Stand-alone Flipout layers:
 ## Usage
 Pull this repository or just simply copy and paste the codes.
 
-Example usage 1:
+Example usage for wrapper classes:
+```
+import pytorch_flipout.Variational
+layer = flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
+```
+
+Example usage for Stand-alone Flipout layers:
 ```
 import pytorch_flipout.flipout
 layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
 output, kld = layer(torch.randn(1, 10))
-```
-
-Example usage 2:
-```
-import pytorch_flipout.Variational
-layer = flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
 ```
 
 ## Derivations
