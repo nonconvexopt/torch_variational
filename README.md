@@ -1,14 +1,18 @@
 # pytorch-flipout
-Pytorch implementation of "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018
+Pytorch implementation of:<br>
+Flipout in "Flipout: Efficient Pseudo-Independent Weight Perturbations on Mini-Batches", ICLR 2018<br>
+Local Reparameterization Trick in "Variational Dropout and the Local Reparameterization Trick", NIPS 2015<br>
 
 ## Dependencies
 Pytorch >= 1.0.0
 
 ## Available modules
-Conv2d_flipout<br>
-Linear_flipout<br>
-Flipout Wrapper for nn.module<br>
-Local Reparameterization Wrapper for nn.module<br>
+Variationalizers:
+> Flipout Wrapper for nn.module<br>
+> Local Reparameterization Wrapper for nn.module<br>
+Stand-alone Flipout layers:
+> Conv2d_flipout<br>
+> Linear_flipout<br>
 
 ## Usage
 Pull this repository or just simply copy and paste the codes.
