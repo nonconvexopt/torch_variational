@@ -10,8 +10,8 @@ Pytorch >= 1.0.0
 Variationalizers:
 - Flipout Wrapper for nn.module<br>
 - Local Reparameterization Wrapper for nn.module<br>
-<br>
-Stand-alone Flipout layers:<br>
+
+Stand-alone Flipout layers:
 - Conv2d_flipout<br>
 - Linear_flipout<br>
 
