@@ -8,11 +8,12 @@ Pytorch >= 1.0.0
 
 ## Available modules
 Variationalizers:
-> Flipout Wrapper for nn.module<br>
-> Local Reparameterization Wrapper for nn.module<br>
+- Flipout Wrapper for nn.module<br>
+- Local Reparameterization Wrapper for nn.module<br>
+<br>
 Stand-alone Flipout layers:
-> Conv2d_flipout<br>
-> Linear_flipout<br>
+- Conv2d_flipout<br>
+- Linear_flipout<br>
 
 ## Usage
 Pull this repository or just simply copy and paste the codes.
