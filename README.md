@@ -1,4 +1,4 @@
-# pytorch-flipout
+# torch_variational
 Pytorch implementation and Wapper classes for torch.nn.modules layers of:<br>
 - Flipout[1]<br>
 - Local Reparameterization Trick[2]<br>
