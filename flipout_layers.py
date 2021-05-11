@@ -5,9 +5,9 @@ import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 
-def mul_sign(x) -> torch.Tensor:
-    #Best performance on several experiments
-    return x.mul(torch.empty(x.shape, device = x.device).uniform_(-1,1).sign())
+from utils import mul_sign
+
+
 
 class Conv2d_flipout(nn.Module):
     def __init__(self, in_features: int, out_features: int, bias=False, kernel_size=1, stride=1, padding=0, dilation=1, groups=1):

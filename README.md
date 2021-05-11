@@ -7,16 +7,33 @@ Pytorch >= 1.0.0
 ## Available modules
 Conv2d_flipout<br>
 Linear_flipout<br>
-(To be added)
+Flipout Wrapper for nn.module<br>
+Local Reparameterization Wrapper for nn.module<br>
 
 ## Usage
 Pull this repository or just simply copy and paste the codes.
 
-Example usage:
-<pre><code>import flipout
+Example usage 1:
+```
+import pytorch_flipout.flipout
 layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
-output, kld = layer(torch.randn(1, 10))</code></pre>
+output, kld = layer(torch.randn(1, 10))
+```
 
+Example usage 2:
+```
+import pytorch_flipout.Variational
+layer = flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
+```
+
+## Derivations
+```
+$$
+q(w_{ij})=N(w_{ij}|\mu_{ij}, \mu_{ij}^2\sigma_{ij}^2) \\
+a_{ij} = \sum_{i} x_i w_{ij} \\
+q(a_{ij}) = N(a_{ij}|\sum_{i} x_i w_{ij}, \sum_{i} x_i^2 w_{ij}^2)
+$$
+```
 
 ## References
 ```
