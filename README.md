@@ -31,6 +31,7 @@ output, kld = layer(torch.randn(1, 10))
 ```
 
 ## Derivations
+### Local Reparameterization Trick
 ![formula](https://render.githubusercontent.com/render/math?math=\Large{q(w_{ij})=N(w_{ij}|\mu_{ij},\mu_{ij}^2\sigma_{ij}^2)})<br>
 ![formula](https://render.githubusercontent.com/render/math?math=\Large{a_{ij}=\sum_{i}x_iw_{ij}})<br>
 ![formula](https://render.githubusercontent.com/render/math?math=\Large{q(a_{ij})=N(a_{ij}|\sum_{i}x_iw_{ij},\sum_{i}x_i^2w_{ij}^2)})<br>
