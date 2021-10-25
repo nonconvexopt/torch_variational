@@ -38,8 +38,9 @@ a_{ij} = \sum_{i} x_i w_{ij} \\
 q(a_{ij}) = N(a_{ij}|\sum_{i} x_i w_{ij}, \sum_{i} x_i^2 w_{ij}^2)
 $$
 ```
-![formula](https://render.githubusercontent.com/render/math?math=q(w_{ij})=N(w_{ij}|\mu_{ij},\mu_{ij}^2\sigma_{ij}^2))
-
+![formula](https://render.githubusercontent.com/render/math?math=q(w_{ij})=N(w_{ij}|\mu_{ij},\mu_{ij}^2\sigma_{ij}^2))<br>
+![formula](https://render.githubusercontent.com/render/math?math=a_{ij}=\sum_{i}x_iw_{ij})<br>
+![formula](https://render.githubusercontent.com/render/math?math=q(a_{ij})=N(a_{ij}|\sum_{i}x_iw_{ij},\sum_{i}x_i^2w_{ij}^2))
 ## References
 ```
 [1] @inproceedings{DBLP:conf/iclr/WenVBTG18,
