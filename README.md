@@ -38,7 +38,7 @@ a_{ij} = \sum_{i} x_i w_{ij} \\
 q(a_{ij}) = N(a_{ij}|\sum_{i} x_i w_{ij}, \sum_{i} x_i^2 w_{ij}^2)
 $$
 ```
-[formula](https://render.githubusercontent.com/render/math?math=q(w_{ij})=N(w_{ij}|\mu_{ij}, \mu_{ij}^2\sigma_{ij}^2))
+[formula](https://render.githubusercontent.com/render/math?math=q(w_{ij})=N(w_{ij}|\mu_{ij},\mu_{ij}^2\sigma_{ij}^2))
 
 ## References
 ```
