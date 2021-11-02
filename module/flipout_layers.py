@@ -5,16 +5,14 @@ import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 
-from utils import mul_sign
-
-
+from util import mul_sign
 
 class Conv2d_flipout(nn.Module):
     def __init__(self, in_features: int, out_features: int, bias=False, kernel_size=1, stride=1, padding=0, dilation=1, groups=1):
         super(Conv2d_flipout, self).__init__()
         
         if isinstance(kernel_size, int):
-            self.kernel_size = [kernel_size, kernel_size]
+            self.kernel_size = (kernel_size, kernel_size)
         else:
             self.kernel_size = kernel_size
             
