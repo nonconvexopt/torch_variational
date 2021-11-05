@@ -110,92 +110,88 @@ class Variational_Flipout(nn.Module):
 #   has been known to exhibits little advantages when considered stochastic.
 #2. Bias gets information from gradient at multiple sources compared to weight
 #3. 
-
-class Variational_Flipout(nn.Module):
-    def __init__(self, module: nn.Module, weight_multiplcative_variance = True):
-        super(Variational_Flipout, self).__init__()
-        """
-        Wrapper class for existing torch modules.
-        Use multiplicative noise in weight space to make layer stochastic.
-        """
-        
-        assert True in [isinstance(module, m) for m in module_to_functional]
-
-        self.weight_mean = module
-        self.weight_logvar = nn.Parameter(self.weight_mean.weight.data.clone().detach().fill_(0))
-        self.weight_multiplcative_variance = weight_multiplcative_variance
-        
-    def forward(self, x) -> torch.Tensor:
-        weight = self.weight_mean.weight.data
-        bias = self.weight_mean.bias
-        self.weight_mean.bias = None
-        if self.weight_multiplcative_variance:
-            self.weight_mean.weight.data = (
-                self.weight_mean.weight.data
-                * self.weight_logvar.div(2).exp()
-                * torch.randn(self.weight_logvar.shape, device = self.weight_logvar.device)
-            )
-        else:
-            self.weight_mean.weight.data = (
-                self.weight_logvar.div(2).exp()
-                * torch.randn(self.weight_logvar.shape, device = self.weight_logvar.device)
-            )
-        noise = mul_sign(self.weight_mean(mul_sign(x)))
-        self.weight_mean.weight.data = weight
-        self.weight_mean.bias = bias
-        mean = self.weight_mean(x)
-        
-        return mean + noise
-      
-    def kld(self) -> torch.Tensor:
-        #KL(q||p) with respect to Standard Normal p
-        return (
-            self.weight_mean.weight.pow(2)
-            - self.weight_logvar
-            + self.weight_logvar.exp()
-            - 1
-        ).sum().div(2)
-    
     
     
 class Variational_LRT(nn.Module):
-    def __init__(self, module: nn.Module, stochastic_bias = False):
+    def __init__(self, module: nn.Module, weight_multiplcative_variance = True):
         super(Variational_LRT, self).__init__()
         """
         Wrapper class for existing torch modules.
         Use multiplicative noise in weight space to make layer stochastic.
         """
         
-        assert True in [isinstance(module, m) for m in registered_modules]
-
-        self.module = module
+        assert True in [isinstance(module, m) for m in module_to_functional]
         
-        self.weight = module.weight
+        self.functional, self.arglist = module_to_functional[module.__class__]
+        
+        self.weight_mean = module.weight
         self.weight_logvar = nn.Parameter(
-            torch.zeros(
-                self.weight.shape,
-                device = self.weight.device
+            torch.full(
+                size = self.weight_mean.shape,
+                fill_value = math.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
+                #fill_value = math.log(1 / self.weight_mean.shape[1]),
+                device = self.weight_mean.device,
+                requires_grad = True,
             )
         )
-        
+        self.register_buffer(
+            'weight_logvar_prior',
+            torch.full(
+                size = self.weight_mean.shape,
+                fill_value = math.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
+                #fill_value = math.log(1 / self.weight_mean.shape[1]),
+                device = self.weight_mean.device,
+                requires_grad = False,
+            )
+        )
+
+        self.weight_multiplcative_variance = weight_multiplcative_variance
         self.bias = module.bias
-        module.bias = None
         
-    def kld(self) -> torch.Tensor:
-        #KLD with Standard Normal
-        return (self.weight.pow(2) - self.weight_logvar + self.weight_logvar.exp() - 1).mean().div(2)
+        self.functional_kwargs = {
+            key:value
+            for key, value
+            in module.__dict__.items()
+            if key not in ['input', 'weight', 'bias'] and key in self.arglist
+        }
     
     def forward(self, x) -> torch.Tensor:
+        x_squared = x.pow(2)
         
-        self.module.weight = self.weight
-        mean = self.module(x)
+        mean = self.functional(
+            input = x,
+            weight = self.weight_mean,
+            bias = None,
+            **self.functional_kwargs,
+        )
         
-        self.module.weight = self.weight * self.weight_logvar.exp()
-        var = self.module(x.pow(2))
+        weight_var = self.weight_logvar.exp()
+        weight_var_prior = self.weight_logvar_prior.exp()
+        if self.weight_multiplcative_variance:
+            weight_var = weight_var * self.weight_mean.pow(2)
+            weight_var_prior = weight_var_prior * self.weight_mean.pow(2)
         
-        output = mean + var.sqrt() * torch.randn(var.shape, device = self.bias.device, requires_grad = False)
+        var = self.functional(
+            input = x_squared,
+            weight = weight_var,
+            bias = None,
+            **self.functional_kwargs,
+        )
+
+        var_prior = self.functional(
+            input = x_squared,
+            weight = weight_var_prior,
+            bias = None,
+            **self.functional_kwargs,
+        )
         
-        if self.bias:
-            output += self.bias
+        self._kld = ((var_prior / var).log() + (var + mean.pow(2)) / var_prior).mean().div(2)
         
-        return output
+        out = mean + var.sqrt() * torch.randn(var.shape, device = var.device, requires_grad = False)
+        if self.bias is not None:
+            out += self.bias.view([1, -1] + [1] * (out.dim() - 2))
+        
+        return out
+
+    def kld(self) -> torch.Tensor:
+        return self._kld
