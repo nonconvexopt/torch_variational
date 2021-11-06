@@ -31,6 +31,7 @@ output, kld = layer(torch.randn(1, 10))
 ```
 
 ## Derivations
+Assumed weight multiplicative variances.
 ### Flipout
 ![formula](https://render.githubusercontent.com/render/math?math=\Large{W_{ij}=\overline{W_{ij}}+{\Delta}W_{ij}})<br>
 ![formula](https://render.githubusercontent.com/render/math?math=\Large{q({\Delta}W_{ij})=N({\Delta}W_{ij}{\mid}0,\overline{W_{ij}}^2\sigma_{ij}^2)})<br>
