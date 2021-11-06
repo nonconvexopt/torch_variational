@@ -31,10 +31,14 @@ output, kld = layer(torch.randn(1, 10))
 ```
 
 ## Derivations
+### Flipout
+![formula](https://render.githubusercontent.com/render/math?math=\Large{W_{ij}=\bar{W}_{ij}+\deltaW_{ij}})<br>
+![formula](https://render.githubusercontent.com/render/math?math=\Large{q(\deltaW_{ij})=N(\deltaW_{ij}\mid0,\bar{W}_{ij}^2\sigma_{ij}^2)})<br>
+![formula](https://render.githubusercontent.com/render/math?math=\Large{f(x_n)=x_n\bar{W}_{ij}+((x_n\circs_n)\deltaW_{ij})\circr_n}<br>
 ### Local Reparameterization Trick
-![formula](https://render.githubusercontent.com/render/math?math=\Large{q(w_{ij})=N(w_{ij}\mid\mu_{ij},\mu_{ij}^2\sigma_{ij}^2)})<br>
+![formula](https://render.githubusercontent.com/render/math?math=\Large{q(W_{ij})=N(W_{ij}\mid\mu_{ij},\mu_{ij}^2\sigma_{ij}^2)})<br>
 ![formula](https://render.githubusercontent.com/render/math?math=\Large{a_{nj}=\sum_{i}x_{ni}w_{ij}})<br>
-![formula](https://render.githubusercontent.com/render/math?math=\Large{q(a_{nj})=N(a_{nj}\mid\sum_{i}x_{ni}w_{ij},\sum_{i}x_{ni}^2w_{ij}^2)})<br>
+![formula](https://render.githubusercontent.com/render/math?math=\Large{q(a_{nj})=N(a_{nj}\mid\sum_{i}x_{ni}W_{ij},\sum_{i}x_{ni}^2W_{ij}^2)})<br>
 
 ## References
 ```
