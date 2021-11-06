@@ -194,4 +194,10 @@ class Variational_LRT(nn.Module):
         return out
 
     def kld(self) -> torch.Tensor:
-        return self._kld
+        #KL(q||p) with respect to Standard Normal p
+        return (
+            self.weight_mean.pow(2)
+            - self.weight_logvar
+            + self.weight_logvar.exp()
+            - 1
+        ).mean().div(2)
