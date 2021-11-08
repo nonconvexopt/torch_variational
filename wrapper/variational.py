@@ -37,6 +37,13 @@ module_to_functional = {
         #TBA
 }
 
+
+#I considered bias deterministic because of several reasons:
+#Bias in fully-connected layer and Convolutional layer has been
+#known to exhibit little advantages when considered stochastic since
+#bias gets information from gradient at multiple sources compared to weight
+#and the variance of bias shrinks quickly.
+
 class Variational_Flipout(nn.Module):
     def __init__(
         self,
@@ -95,7 +102,7 @@ class Variational_Flipout(nn.Module):
                 **self.functional_kwargs,
             )
         )
-      
+    
     def kld(self) -> torch.Tensor:
         #KL(q||p) with respect to Standard Normal p
         return (
@@ -105,13 +112,7 @@ class Variational_Flipout(nn.Module):
             - 1
         ).mean().div(2)
 
-#I considered bias deterministic because of several reasons:
-#1. Bias in fully-connected layer and Convolutional layer
-#   has been known to exhibits little advantages when considered stochastic.
-#2. Bias gets information from gradient at multiple sources compared to weight
-#3. 
-    
-    
+
 class Variational_LRT(nn.Module):
     def __init__(self, module: nn.Module, weight_multiplcative_variance = True):
         super(Variational_LRT, self).__init__()
