@@ -129,8 +129,8 @@ class Variational_LRT(nn.Module):
         self.weight_logvar = nn.Parameter(
             torch.full(
                 size = self.weight_mean.shape,
-                fill_value = math.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
-                #fill_value = math.log(1 / self.weight_mean.shape[1]),
+                fill_value = torch.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
+                #fill_value = torch.log(1 / self.weight_mean.shape[1]),
                 device = self.weight_mean.device,
                 requires_grad = True,
             )
@@ -139,8 +139,8 @@ class Variational_LRT(nn.Module):
             'weight_logvar_prior',
             torch.full(
                 size = self.weight_mean.shape,
-                fill_value = math.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
-                #fill_value = math.log(1 / self.weight_mean.shape[1]),
+                fill_value = torch.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
+                #fill_value = torch.log(1 / self.weight_mean.shape[1]),
                 device = self.weight_mean.device,
                 requires_grad = False,
             )
