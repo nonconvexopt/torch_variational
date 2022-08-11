@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 sys.path.append('../')
-from util import mul_sign
+from ..util import mul_sign
 
 linear_args = ()
 conv_args = ('stride', 'padding', 'groups', 'dilation')
