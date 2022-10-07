@@ -15,17 +15,30 @@ Stand-alone Flipout layers:
 - Conv2d_flipout<br>
 - Linear_flipout<br>
 
+## Install
+Clone this repo and run:
+```
+pip install -e torch_variational
+```
+
 ## Usage
 
 Example usage for wrapper classes:
 ```
-import pytorch_flipout.Variational
-layer = flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
+from torch_variational.wrapper import Variational_Flipout, Variational_LRT
+Flipout_layer = Variational_Flipout(nn.Linear(in_features = 10, out_features = 10, bias = True))
+LRT_layer = Variational_LRT(nn.Linear(in_features = 10, out_features = 10, bias = True))
+
+Flipout_output = Flipout_layer(torch.randn(1, 10))
+LRT_output = LRT_layer(torch.randn(1, 10))
+
+Flipout_kld = Flipout_layer.kld()
+LRT_kld = LRT_layer.kld()
 ```
 
 Example usage for Stand-alone Flipout layers:
 ```
-import pytorch_flipout.flipout
+from torch_variational.wrapper import Variational_Flipout
 layer = flipout.Linear_flipout(in_features = 10, out_features = 10, bias = True)
 output, kld = layer(torch.randn(1, 10))
 ```
