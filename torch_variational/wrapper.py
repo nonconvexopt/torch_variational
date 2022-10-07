@@ -1,10 +1,9 @@
-import sys
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-sys.path.append('../')
-from ..util import mul_sign
+from .util import mul_sign
 
 linear_args = ()
 conv_args = ('stride', 'padding', 'groups', 'dilation')
@@ -54,12 +53,14 @@ class Variational_Flipout(nn.Module):
         """
         Wrapper class for existing torch modules.
         Use multiplicative noise in weight space to make layer stochastic.
+        Bias is deterministic.
         """
         
         assert True in [isinstance(module, m) for m in module_to_functional]
 
         self.functional, self.arglist = module_to_functional[module.__class__]
         
+        # Assigning parameters of other module will automatically register it as the parameter
         self.weight_mean = module.weight
         self.weight_logvar = nn.Parameter(
             torch.full(
@@ -119,12 +120,14 @@ class Variational_LRT(nn.Module):
         """
         Wrapper class for existing torch modules.
         Use multiplicative noise in weight space to make layer stochastic.
+        Bias is deterministic.
         """
         
         assert True in [isinstance(module, m) for m in module_to_functional]
         
         self.functional, self.arglist = module_to_functional[module.__class__]
         
+        # Assigning parameters of other module will automatically register it as the parameter
         self.weight_mean = module.weight
         self.weight_logvar = nn.Parameter(
             torch.full(
@@ -133,16 +136,6 @@ class Variational_LRT(nn.Module):
                 #fill_value = torch.log(1 / self.weight_mean.shape[1]),
                 device = self.weight_mean.device,
                 requires_grad = True,
-            )
-        )
-        self.register_buffer(
-            'weight_logvar_prior',
-            torch.full(
-                size = self.weight_mean.shape,
-                fill_value = torch.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
-                #fill_value = torch.log(1 / self.weight_mean.shape[1]),
-                device = self.weight_mean.device,
-                requires_grad = False,
             )
         )
 
@@ -156,6 +149,52 @@ class Variational_LRT(nn.Module):
             if key not in ['input', 'weight', 'bias'] and key in self.arglist
         }
     
+    def forward(self, x) -> torch.Tensor:
+        x_squared = x.pow(2)
+        
+        mean = self.functional(
+            input = x,
+            weight = self.weight_mean,
+            bias = self.bias,
+            **self.functional_kwargs,
+        )
+        
+        weight_var = self.weight_logvar.exp()
+        if self.weight_multiplcative_variance:
+            weight_var = weight_var * self.weight_mean.pow(2)
+        
+        var = self.functional(
+            input = x_squared,
+            weight = weight_var,
+            bias = None,
+            **self.functional_kwargs,
+        )
+        
+        out = mean + var.sqrt() * torch.randn(var.shape, device = var.device, requires_grad = False)
+        
+        return out
+
+    def kld(self) -> torch.Tensor:
+        #KL(q||p) with respect to Standard Normal p
+        return (
+            self.weight_mean.pow(2)
+            - self.weight_logvar
+            + self.weight_logvar.exp()
+            - 1
+        ).mean().div(2)
+    
+    """
+        self.register_buffer(
+            'weight_logvar_prior',
+            torch.full(
+                size = self.weight_mean.shape,
+                fill_value = torch.log(1 / torch.prod(torch.tensor(self.weight_mean.shape[1:]))),
+                #fill_value = torch.log(1 / self.weight_mean.shape[1]),
+                device = self.weight_mean.device,
+                requires_grad = False,
+            )
+        )
+        
     def forward(self, x) -> torch.Tensor:
         x_squared = x.pow(2)
         
@@ -193,12 +232,4 @@ class Variational_LRT(nn.Module):
             out += self.bias.view([1, -1] + [1] * (out.dim() - 2))
         
         return out
-
-    def kld(self) -> torch.Tensor:
-        #KL(q||p) with respect to Standard Normal p
-        return (
-            self.weight_mean.pow(2)
-            - self.weight_logvar
-            + self.weight_logvar.exp()
-            - 1
-        ).mean().div(2)
+    """
