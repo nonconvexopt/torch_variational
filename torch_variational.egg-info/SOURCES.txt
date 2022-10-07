@@ -1,0 +1,14 @@
+README.md
+setup.py
+./torch_variational/__init__.py
+./torch_variational/module/__init__.py
+./torch_variational/module/flipout_layers.py
+./torch_variational/util/__init__.py
+./torch_variational/util/utils.py
+./torch_variational/wrapper/__init__.py
+./torch_variational/wrapper/variational.py
+torch_variational.egg-info/PKG-INFO
+torch_variational.egg-info/SOURCES.txt
+torch_variational.egg-info/dependency_links.txt
+torch_variational.egg-info/requires.txt
+torch_variational.egg-info/top_level.txt
